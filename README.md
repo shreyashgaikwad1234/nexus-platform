@@ -1,4 +1,17 @@
 # Nexus Enterprise Platform (v3.0.0-PRO)
+
+![React](https://img.shields.io/badge/Frontend-React-61DAFB)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6)
+![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791)
+![dbt](https://img.shields.io/badge/Data-dbt-FF694B)
+![XGBoost](https://img.shields.io/badge/ML-XGBoost-F4B400)
+![SHAP](https://img.shields.io/badge/Explainability-SHAP-E91E63)
+![Prophet](https://img.shields.io/badge/Forecasting-Prophet-7B68EE)
+![TailwindCSS](https://img.shields.io/badge/UI-TailwindCSS-38BDF8)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000)
+![Render](https://img.shields.io/badge/API-Render-46E3B7)
+
 **Architecture:** Astro | **Backend:** FastAPI | **ML:** XGBoost | **UI:** TailwindCSS
 
 Nexus is a world-class, enterprise-grade AI Customer Retention Intelligence Platform designed to protect and grow global revenue streams. Inspired by industry-leading analytics and intelligence products, it combines advanced machine learning (XGBoost + Prophet) with a cinematic, high-density Command Center for real-time churn prediction, behavioral explanation, and strategic forecasting.
