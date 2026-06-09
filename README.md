@@ -1,94 +1,85 @@
-# Nexus Platform
+# Nexus Enterprise Platform (v3.0.0-PRO)
+**Architecture:** Astro | **Backend:** FastAPI | **ML:** XGBoost | **UI:** TailwindCSS
 
-**AI-Powered Customer Retention Intelligence**
+Nexus is a world-class, enterprise-grade AI Customer Retention Intelligence Platform designed to protect and grow global revenue streams. Inspired by industry-leading analytics and intelligence products, it combines advanced machine learning (XGBoost + Prophet) with a cinematic, high-density Command Center for real-time churn prediction, behavioral explanation, and strategic forecasting.
 
-The **Nexus Platform** is an enterprise-grade analytics engineering and machine learning platform. It predicts customer churn risk, explains underlying behavior using transparent ML models, recommends targeted retention interventions, and forecasts strategic business impact—all unified within a stunning, "Editorial High-Tech" executive dashboard.
+## 🚀 Key Features
+### 🧠 Advanced AI & ML Core
+* **Predictive Churn Engine:** Real-time customer risk scoring using a custom-trained XGBoost model.
+* **Explainable AI (SHAP):** Human-readable rationale for every decision, visualizing exactly how features like "Delivery Delay" or "Monetary Value" influenced the churn risk.
+* **Strategic Forecasting:** 180-Day Prophet predictions estimating future revenue, orders, and active users with confidence intervals.
 
-## 🚀 Key Capabilities
+### 🏛️ Enterprise Command Center
+* **Review Intelligence:** Multilingual NLP pipeline (VADER) processing customer feedback to correlate customer satisfaction with revenue at risk.
+* **Global Data Quality:** Analytics Engineering pipeline monitor tracking dbt test results, freshness lag, and anomalies.
+* **Full-Screen Intelligence:** Dedicated modal workflows for analysts to deep-dive into suspicious at-risk profiles, including CSV exports and targeted intervention protocols.
 
-- **Predictive Churn Engine:** Leverages XGBoost to identify at-risk customers by analyzing recency, frequency, monetary value, and behavioral signals.
-- **Transparent AI (SHAP):** Provides exact mathematical contribution of every feature to the final prediction, removing the "black box" of machine learning.
-- **Campaign Simulator:** Dynamically forecast ROI, expected reach, and incremental revenue based on customizable budgets and discount intensities.
-- **Multilingual NLP Review Intelligence:** Processes customer feedback through VADER sentiment analysis to correlate customer satisfaction with revenue at risk.
-- **Analytics Engineering:** Robust data pipeline constructed with **dbt** (Data Build Tool) ensuring data integrity, uniqueness, and consistency.
-- **Executive Command Center:** A bespoke, Neo-brutalist (Vogue meets Data) React frontend that seamlessly transitions between Light and Dark modes.
+### 📊 Business Intelligence
+* **Executive Summary:** Real-time KPI tracking for Revenue Protected, Revenue at Risk Identified, and Retention Uplift Potential.
+* **Dual-Theme Architecture:** Seamless transition between high-contrast "Enterprise Light" and premium "Midnight Dark" modes with perfect editorial typography.
 
-## 🛠️ Technology Stack
+## 🛠️ Tech Stack
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | AstroJS, React, TypeScript |
+| **Styling** | Tailwind CSS (v4), Framer Motion, Recharts |
+| **Backend** | FastAPI, Uvicorn, Python 3.11 |
+| **ML/DS** | XGBoost, SHAP, Prophet, Pandas, NumPy, VADER NLP |
+| **Data Eng** | dbt (Data Build Tool), PostgreSQL |
 
-| Layer | Technologies |
-| --- | --- |
-| **Frontend** | Astro, React, Tailwind CSS, Recharts, Framer Motion, TypeScript |
-| **Backend API** | FastAPI, Python, SQLAlchemy, Uvicorn |
-| **Machine Learning** | XGBoost, SHAP, Prophet, Pandas, NumPy, VADER NLP |
-| **Data Engineering** | dbt (Data Build Tool), PostgreSQL |
+## 🏗️ System Architecture
+Nexus uses a sophisticated Multi-Layer Architecture:
 
-## 🏗️ Repository Structure
+* **Data Storage & Engineering:** PostgreSQL warehouse orchestrated by dbt to create modular staging models and the final `mart_customer_360` table.
+* **Feature Engineering:** Raw data engineered into high-fidelity predictive signals (Recency, Frequency, Sentiment).
+* **Intelligence Layer:** XGBoost churn model, SHAP explainability, and NLP pipelines calculating real-time metrics.
+* **API Gateway:** High-performance FastAPI backend serving model inferences with sub-millisecond response times.
+* **Presentation:** Component-driven Astro + React frontend utilizing a custom neo-brutalist / high-fashion data aesthetic.
 
-```text
-/
-├── frontend/           # Astro + React Executive Dashboard
-├── backend/            # FastAPI ML Serving & Intelligence API
-├── screenshots/        # Application showcase images
-├── docs/               # Architecture diagrams and system design docs
-├── dbt_project/        # (Optional) Source data models and transformations
-├── .env.example        # Reference environment variables
-├── render.yaml         # Backend deployment configuration
-└── README.md           # This document
-```
+## 💻 Installation & Setup
 
-## 🌐 Deployment Guide
-
-This project is configured for cloud deployment using **Vercel** (Frontend) and **Render** (Backend).
-
-### Backend (Render)
-1. Fork or clone this repository.
-2. Sign in to [Render](https://render.com/) and create a new **Web Service**.
-3. Connect your GitHub repository.
-4. Render will automatically detect the `render.yaml` blueprint in the root directory.
-5. In the Render dashboard, set your Environment Variables:
-   - `DATABASE_URL`: Your PostgreSQL connection string.
-   - `ALLOWED_ORIGINS`: e.g., `https://nexus-platform-frontend.vercel.app`
-
-### Frontend (Vercel)
-1. Sign in to [Vercel](https://vercel.com/) and click **Add New Project**.
-2. Import the repository and set the **Root Directory** to `frontend`.
-3. Vercel will auto-detect **Astro** as the framework.
-4. Set the Environment Variables:
-   - `PUBLIC_API_URL`: Your deployed Render backend URL (e.g., `https://nexus-backend.onrender.com`).
-5. Click **Deploy**.
-
-## 💻 Local Development
-
-### 1. Database Setup
-Ensure you have a PostgreSQL database running locally or in the cloud. Update the connection string in your `.env` file.
-
-### 2. Backend API
+### 1. Backend Setup
 ```bash
-cd backend
+# Clone the repository
+git clone https://github.com/shreyashgaikwad1234/nexus-platform.git
+cd nexus-platform/backend
+
+# Create virtual environment & Install Python dependencies
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Copy .env.example to .env and update credentials
-cp .env.example .env
-
-# Run the FastAPI server
+# Run the Intelligence Engine (FastAPI)
 uvicorn main:app --reload --port 8000
 ```
 
-### 3. Frontend Dashboard
+### 2. Frontend Setup
 ```bash
-cd frontend
+# Navigate to the frontend
+cd ../frontend
+
+# Install Node dependencies
 npm install
 
-# Copy .env.example to .env and configure the backend URL
-cp .env.example .env
-
-# Start the Astro dev server
+# Start the Command Center
 npm run dev
 ```
 
-Visit `http://localhost:4321` to view the Executive Command Center.
+## 🕵️ Data Science Deep-Dive
+### The Model: XGBoost + Prophet
+Nexus addresses customer churn and revenue forecasting using a dual-engine approach. XGBoost identifies the subtle behavioral patterns indicating a customer is likely to leave, while Prophet handles time-series forecasting to predict macro-level business trends, handling seasonality and holidays automatically.
 
-## 📄 License
-This project is open-source and available under the [MIT License](LICENSE).
+### Interpretability: SHAP
+In enterprise decision-making, a "Black Box" is unacceptable. Nexus utilizes SHAP (SHapley Additive exPlanations) to break down the model's output. Analysts can see exactly which behavioral drivers push a customer toward churning (Risk) or retaining, enabling highly targeted intervention protocols.
+
+## 📈 Executive Impact
+Nexus is designed to demonstrate three core proficiencies:
+* **Staff-Level Engineering:** Modular Astro architecture, complex state management, and an uncompromising editorial aesthetic.
+* **Product Thinking:** Focus on actionable business value (Revenue Protected, ROI of Campaigns) over purely academic metrics.
+* **Data Science Maturity:** Combining predictive modeling, time-series forecasting, and NLP into a unified, explainable product.
+
+## ⚖️ License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+**Nexus Enterprise** • Securing and Scaling Global Revenue through Neural Intelligence.
