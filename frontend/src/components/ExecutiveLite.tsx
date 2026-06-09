@@ -8,7 +8,8 @@ const ExecutiveLite = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/metrics')
+    const API_URL = import.meta.env.PUBLIC_API_URL;
+    fetch(`${API_URL}/metrics`)
       .then(res => res.json())
       .then(data => {
         setMetrics(data);

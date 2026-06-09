@@ -45,12 +45,12 @@ const ExecutiveCommandCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
+      const API_URL = import.meta.env.PUBLIC_API_URL;
       const [m, s, i, c] = await Promise.all([
-        fetch(`${baseUrl}/metrics`).then(res => { if (!res.ok) throw new Error('Metrics fail'); return res.json(); }),
-        fetch(`${baseUrl}/segments`).then(res => { if (!res.ok) throw new Error('Segments fail'); return res.json(); }),
-        fetch(`${baseUrl}/interventions`).then(res => { if (!res.ok) throw new Error('Interventions fail'); return res.json(); }),
-        fetch(`${baseUrl}/customers?limit=10`).then(res => { if (!res.ok) throw new Error('Customers fail'); return res.json(); })
+        fetch(`${API_URL}/metrics`).then(res => { if (!res.ok) throw new Error('Metrics fail'); return res.json(); }),
+        fetch(`${API_URL}/segments`).then(res => { if (!res.ok) throw new Error('Segments fail'); return res.json(); }),
+        fetch(`${API_URL}/interventions`).then(res => { if (!res.ok) throw new Error('Interventions fail'); return res.json(); }),
+        fetch(`${API_URL}/customers?limit=10`).then(res => { if (!res.ok) throw new Error('Customers fail'); return res.json(); })
       ]);
       setMetrics(m);
       setSegments(s);
@@ -68,8 +68,8 @@ const ExecutiveCommandCenter = () => {
       if (allCustomers.length === 0) {
           setLoadingAll(true);
           try {
-              const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
-              const res = await fetch(`${baseUrl}/customers?limit=500`);
+              const API_URL = import.meta.env.PUBLIC_API_URL;
+              const res = await fetch(`${API_URL}/customers?limit=500`);
               const data = await res.json();
               setAllCustomers(data);
           } catch (e) {
@@ -105,8 +105,8 @@ const ExecutiveCommandCenter = () => {
   );
 
   const runSimulation = () => {
-    const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000';
-    fetch(`${baseUrl}/simulation?budget=${budget}&discount_pct=${discount}&target_segment=${targetSegment}`)
+    const API_URL = import.meta.env.PUBLIC_API_URL;
+    fetch(`${API_URL}/simulation?budget=${budget}&discount_pct=${discount}&target_segment=${targetSegment}`)
       .then(res => res.json())
       .then(data => setSimResults(data));
   };

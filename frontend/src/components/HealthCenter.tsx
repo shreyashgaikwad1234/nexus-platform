@@ -29,10 +29,10 @@ const HealthCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
+      const API_URL = import.meta.env.PUBLIC_API_URL;
       const [list, sum] = await Promise.all([
-        fetch(`${baseUrl}/customer-health?limit=50`).then(res => res.json()),
-        fetch(`${baseUrl}/customer-health/summary`).then(res => res.json())
+        fetch(`${API_URL}/customer-health?limit=50`).then(res => res.json()),
+        fetch(`${API_URL}/customer-health/summary`).then(res => res.json())
       ]);
       setHealthData(list);
       setSummary(sum);
@@ -45,8 +45,8 @@ const HealthCenter = () => {
   const handleSearch = async () => {
     if (!searchId) return;
     try {
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
-      const res = await fetch(`${baseUrl}/customer-health/${searchId}`);
+      const API_URL = import.meta.env.PUBLIC_API_URL;
+      const res = await fetch(`${API_URL}/customer-health/${searchId}`);
       const data = await res.json();
       if (data.error) {
         setSearchedCustomer(null);

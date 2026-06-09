@@ -28,10 +28,10 @@ const ForecastCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
+      const API_URL = import.meta.env.PUBLIC_API_URL;
       const [fc, sum] = await Promise.all([
-        fetch(`${baseUrl}/forecasts`).then(res => res.json()),
-        fetch(`${baseUrl}/forecasts/summary`).then(res => res.json())
+        fetch(`${API_URL}/forecasts`).then(res => res.json()),
+        fetch(`${API_URL}/forecasts/summary`).then(res => res.json())
       ]);
       setForecasts(fc);
       setSummary(sum);

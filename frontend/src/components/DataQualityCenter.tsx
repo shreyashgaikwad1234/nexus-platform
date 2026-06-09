@@ -20,8 +20,8 @@ const DataQualityCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
-      const res = await fetch(`${baseUrl}/data-quality`);
+      const API_URL = import.meta.env.PUBLIC_API_URL;
+      const res = await fetch(`${API_URL}/data-quality`);
       if (!res.ok) throw new Error('API failed');
       const data = await res.json();
       setDq(data);

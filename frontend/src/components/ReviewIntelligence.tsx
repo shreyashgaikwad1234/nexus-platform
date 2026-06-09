@@ -41,12 +41,12 @@ const ReviewIntelligence = () => {
       if (filterSent !== 'All') query.append('sentiment', filterSent);
       if (filterCat !== 'All') query.append('category', filterCat);
 
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
+      const API_URL = import.meta.env.PUBLIC_API_URL;
 
       const [sum, trnd, rec] = await Promise.all([
-        fetch(`${baseUrl}/reviews/summary`).then(res => { if (!res.ok) throw new Error('Summary API failed'); return res.json(); }),
-        fetch(`${baseUrl}/reviews/sentiment-trends`).then(res => { if (!res.ok) throw new Error('Trends API failed'); return res.json(); }),
-        fetch(`${baseUrl}/reviews?${query.toString()}`).then(res => { if (!res.ok) throw new Error('Reviews API failed'); return res.json(); })
+        fetch(`${API_URL}/reviews/summary`).then(res => { if (!res.ok) throw new Error('Summary API failed'); return res.json(); }),
+        fetch(`${API_URL}/reviews/sentiment-trends`).then(res => { if (!res.ok) throw new Error('Trends API failed'); return res.json(); }),
+        fetch(`${API_URL}/reviews?${query.toString()}`).then(res => { if (!res.ok) throw new Error('Reviews API failed'); return res.json(); })
       ]);
       
       setSummary(sum);

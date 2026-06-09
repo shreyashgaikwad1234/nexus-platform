@@ -33,10 +33,10 @@ const ExplainabilityCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
+      const API_URL = import.meta.env.PUBLIC_API_URL;
       const [drivers, expl] = await Promise.all([
-        fetch(`${baseUrl}/top-risk-drivers`).then(res => res.json()),
-        fetch(`${baseUrl}/explanations?limit=20`).then(res => res.json())
+        fetch(`${API_URL}/top-risk-drivers`).then(res => res.json()),
+        fetch(`${API_URL}/explanations?limit=20`).then(res => res.json())
       ]);
       setGlobalDrivers(drivers);
       setExplanations(expl);
@@ -50,8 +50,8 @@ const ExplainabilityCenter = () => {
   const handleSearch = async () => {
     if (!searchId) return;
     try {
-      const baseUrl = import.meta.env.PUBLIC_API_URL || 'http://localhost:8000';
-      const res = await fetch(`${baseUrl}/explanations/${searchId}`);
+      const API_URL = import.meta.env.PUBLIC_API_URL;
+      const res = await fetch(`${API_URL}/explanations/${searchId}`);
       const data = await res.json();
       if (data.error) {
         setSearchedCustomer(null);
