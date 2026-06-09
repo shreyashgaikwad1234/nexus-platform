@@ -20,7 +20,7 @@ const DataQualityCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL;
+      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
       const res = await fetch(`${API_URL}/data-quality`);
       if (!res.ok) throw new Error('API failed');
       const data = await res.json();

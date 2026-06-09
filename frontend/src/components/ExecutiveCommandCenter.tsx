@@ -45,7 +45,7 @@ const ExecutiveCommandCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL;
+      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
       const [m, s, i, c] = await Promise.all([
         fetch(`${API_URL}/metrics`).then(res => { if (!res.ok) throw new Error('Metrics fail'); return res.json(); }),
         fetch(`${API_URL}/segments`).then(res => { if (!res.ok) throw new Error('Segments fail'); return res.json(); }),
@@ -68,7 +68,7 @@ const ExecutiveCommandCenter = () => {
       if (allCustomers.length === 0) {
           setLoadingAll(true);
           try {
-              const API_URL = import.meta.env.PUBLIC_API_URL;
+              const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
               const res = await fetch(`${API_URL}/customers?limit=500`);
               const data = await res.json();
               setAllCustomers(data);
@@ -105,7 +105,7 @@ const ExecutiveCommandCenter = () => {
   );
 
   const runSimulation = () => {
-    const API_URL = import.meta.env.PUBLIC_API_URL;
+    const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
     fetch(`${API_URL}/simulation?budget=${budget}&discount_pct=${discount}&target_segment=${targetSegment}`)
       .then(res => res.json())
       .then(data => setSimResults(data));
