@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import InterviewMode from '../components/InterviewMode';
+import '../styles/global.css';
+---
+
+<Layout>
+	<InterviewMode client:only="react" />
+</Layout>

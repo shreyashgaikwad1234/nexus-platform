@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DataQualityCenter from '../components/DataQualityCenter';
+import '../styles/global.css';
+---
+
+<Layout>
+	<DataQualityCenter client:only="react" />
+</Layout>

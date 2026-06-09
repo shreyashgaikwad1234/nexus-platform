@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Architecture from '../components/Architecture';
+import '../styles/global.css';
+---
+
+<Layout>
+	<Architecture client:only="react" />
+</Layout>

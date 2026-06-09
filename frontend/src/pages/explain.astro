@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ExplainabilityCenter from '../components/ExplainabilityCenter';
+import '../styles/global.css';
+---
+
+<Layout>
+	<ExplainabilityCenter client:only="react" />
+</Layout>

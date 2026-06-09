@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ReviewIntelligence from '../components/ReviewIntelligence';
+import '../styles/global.css';
+---
+
+<Layout>
+	<ReviewIntelligence client:only="react" />
+</Layout>

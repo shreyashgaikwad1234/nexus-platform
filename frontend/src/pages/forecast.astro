@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ForecastCenter from '../components/ForecastCenter';
+import '../styles/global.css';
+---
+
+<Layout>
+	<ForecastCenter client:only="react" />
+</Layout>

@@ -1,0 +1,9 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ExecutiveCommandCenter from '../components/ExecutiveCommandCenter';
+import '../styles/global.css';
+---
+
+<Layout>
+	<ExecutiveCommandCenter client:only="react" />
+</Layout>
