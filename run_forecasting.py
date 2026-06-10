@@ -4,7 +4,8 @@ from sqlalchemy import create_engine
 from prophet import Prophet
 import os
 
-engine = create_engine("postgresql://postgres:nexus_password@127.0.0.1:5432/nexus_db")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:nexus_password@127.0.0.1:5432/nexus_db")
+engine = create_engine(DATABASE_URL)
 
 def generate_forecasts():
     print("Loading historical data for forecasting...")

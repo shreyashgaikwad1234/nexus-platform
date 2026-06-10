@@ -4,11 +4,7 @@ from sqlalchemy import create_engine
 import time
 
 # Database connection details
-DB_USER = 'postgres'
-DB_PASSWORD = 'nexus_password'
-DB_HOST = '127.0.0.1'
-DB_PORT = '5432'
-DB_NAME = 'nexus_db'
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:nexus_password@127.0.0.1:5432/nexus_db")
 
 # Directory containing Olist CSVs
 DATA_DIR = 'nexus-platform/data'
@@ -18,7 +14,7 @@ def load_csvs_to_postgres():
     time.sleep(10) # Give Postgres a moment to start
     
     # Create engine
-    engine = create_engine(f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+    engine = create_engine(DATABASE_URL)
     
     # List all files in the data directory
     files = [f for f in os.listdir(DATA_DIR) if f.endswith('.csv')]

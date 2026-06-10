@@ -8,7 +8,8 @@ import pickle
 import os
 
 # Database connection
-engine = create_engine("postgresql://postgres:nexus_password@127.0.0.1:5432/nexus_db")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:nexus_password@127.0.0.1:5432/nexus_db")
+engine = create_engine(DATABASE_URL)
 
 def train_customer_intelligence():
     print("Loading Customer 360 data...")
