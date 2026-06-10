@@ -46,6 +46,43 @@ def get_executive_metrics():
     try:
         with engine.connect() as conn:
             df = pd.read_sql(text("SELECT * FROM customer_intelligence"), con=conn)
+        
+        if df.empty:
+            return {
+                "total_customers": 0,
+                "total_revenue": 0.0,
+                "revenue_at_risk": 0.0,
+                "revenue_protected": 0.0,
+                "revenue_opportunity": 0.0,
+                "avg_order_value": 0.0,
+                "retention_rate": 0.0
+            }
+
+        # Calibration logic
+        # Exposure factor: how much of the churn is realistically preventable/addressable
+        df['exposure_factor'] = np.where(df['churn_probability'] > 0.8, 0.9, 
+                                np.where(df['churn_probability'] > 0.5, 0.6, 0.2))
+        
+        df['calibrated_risk'] = df['monetary'] * df['churn_probability'] * df['exposure_factor']
+        
+        total_customers = len(df)
+        total_revenue = df['monetary'].sum()
+        revenue_at_risk = df['calibrated_risk'].sum()
+        revenue_protected = total_revenue - revenue_at_risk
+        revenue_opportunity = total_revenue * 0.15 
+        
+        avg_order_value = df['avg_order_value'].mean()
+        retention_rate = (len(df[df['churn_probability'] < 0.3]) / total_customers) * 100
+        
+        return {
+            "total_customers": total_customers,
+            "total_revenue": float(total_revenue),
+            "revenue_at_risk": float(revenue_at_risk),
+            "revenue_protected": float(revenue_protected),
+            "revenue_opportunity": float(revenue_opportunity),
+            "avg_order_value": float(avg_order_value),
+            "retention_rate": float(retention_rate)
+        }
     except Exception as e:
         logger.error(f"Error fetching metrics: {e}")
         return {
@@ -57,43 +94,6 @@ def get_executive_metrics():
             "avg_order_value": 0.0,
             "retention_rate": 0.0
         }
-    
-    # Calibration logic
-    # Exposure factor: how much of the churn is realistically preventable/addressable
-    df['exposure_factor'] = np.where(df['churn_probability'] > 0.8, 0.9, 
-                            np.where(df['churn_probability'] > 0.5, 0.6, 0.2))
-    
-    df['calibrated_risk'] = df['monetary'] * df['churn_probability'] * df['exposure_factor']
-    
-    total_customers = len(df)
-    if total_customers == 0:
-        return {
-            "total_customers": 0,
-            "total_revenue": 0.0,
-            "revenue_at_risk": 0.0,
-            "revenue_protected": 0.0,
-            "revenue_opportunity": 0.0,
-            "avg_order_value": 0.0,
-            "retention_rate": 0.0
-        }
-    
-    total_revenue = df['monetary'].sum()
-    revenue_at_risk = df['calibrated_risk'].sum()
-    revenue_protected = total_revenue - revenue_at_risk
-    revenue_opportunity = total_revenue * 0.15 # 15% estimated upsell/cross-sell opportunity
-    
-    avg_order_value = df['avg_order_value'].mean()
-    retention_rate = (len(df[df['churn_probability'] < 0.3]) / total_customers) * 100
-    
-    return {
-        "total_customers": total_customers,
-        "total_revenue": float(total_revenue),
-        "revenue_at_risk": float(revenue_at_risk),
-        "revenue_protected": float(revenue_protected),
-        "revenue_opportunity": float(revenue_opportunity),
-        "avg_order_value": float(avg_order_value),
-        "retention_rate": float(retention_rate)
-    }
 
 @app.get("/segments")
 def get_segments():
