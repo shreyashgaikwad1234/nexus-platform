@@ -41,7 +41,7 @@ const ReviewIntelligence = () => {
       if (filterSent !== 'All') query.append('sentiment', filterSent);
       if (filterCat !== 'All') query.append('category', filterCat);
 
-      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
+      const API_URL = 'https://nexus-platform-t1v1.onrender.com';
 
       const [sum, trnd, rec] = await Promise.all([
         fetch(`${API_URL}/reviews/summary`).then(res => { if (!res.ok) throw new Error('Summary API failed'); return res.json(); }),

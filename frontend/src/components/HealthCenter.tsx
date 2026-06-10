@@ -29,7 +29,7 @@ const HealthCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
+      const API_URL = 'https://nexus-platform-t1v1.onrender.com';
       const [list, sum] = await Promise.all([
         fetch(`${API_URL}/customer-health?limit=50`).then(res => res.json()),
         fetch(`${API_URL}/customer-health/summary`).then(res => res.json())
@@ -45,7 +45,7 @@ const HealthCenter = () => {
   const handleSearch = async () => {
     if (!searchId) return;
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
+      const API_URL = 'https://nexus-platform-t1v1.onrender.com';
       const res = await fetch(`${API_URL}/customer-health/${searchId}`);
       const data = await res.json();
       if (data.error) {

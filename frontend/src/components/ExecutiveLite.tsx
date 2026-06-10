@@ -8,7 +8,7 @@ const ExecutiveLite = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
+    const API_URL = 'https://nexus-platform-t1v1.onrender.com';
     fetch(`${API_URL}/metrics`)
       .then(res => res.json())
       .then(data => {

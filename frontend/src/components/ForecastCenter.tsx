@@ -28,7 +28,7 @@ const ForecastCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
+      const API_URL = 'https://nexus-platform-t1v1.onrender.com';
       const [fc, sum] = await Promise.all([
         fetch(`${API_URL}/forecasts`).then(res => res.json()),
         fetch(`${API_URL}/forecasts/summary`).then(res => res.json())

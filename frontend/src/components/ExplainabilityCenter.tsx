@@ -33,7 +33,7 @@ const ExplainabilityCenter = () => {
     setLoading(true);
     setError(null);
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
+      const API_URL = 'https://nexus-platform-t1v1.onrender.com';
       const [drivers, expl] = await Promise.all([
         fetch(`${API_URL}/top-risk-drivers`).then(res => res.json()),
         fetch(`${API_URL}/explanations?limit=20`).then(res => res.json())
@@ -50,7 +50,7 @@ const ExplainabilityCenter = () => {
   const handleSearch = async () => {
     if (!searchId) return;
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-platform-t1v1.onrender.com';
+      const API_URL = 'https://nexus-platform-t1v1.onrender.com';
       const res = await fetch(`${API_URL}/explanations/${searchId}`);
       const data = await res.json();
       if (data.error) {
