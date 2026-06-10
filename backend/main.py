@@ -43,8 +43,20 @@ def health_check():
 @app.get("/metrics")
 def get_executive_metrics():
     logger.info("Fetching executive metrics")
-    with engine.connect() as conn:
-        df = pd.read_sql(text("SELECT * FROM customer_intelligence"), con=conn)
+    try:
+        with engine.connect() as conn:
+            df = pd.read_sql(text("SELECT * FROM customer_intelligence"), con=conn)
+    except Exception as e:
+        logger.error(f"Error fetching metrics: {e}")
+        return {
+            "total_customers": 0,
+            "total_revenue": 0.0,
+            "revenue_at_risk": 0.0,
+            "revenue_protected": 0.0,
+            "revenue_opportunity": 0.0,
+            "avg_order_value": 0.0,
+            "retention_rate": 0.0
+        }
     
     # Calibration logic
     # Exposure factor: how much of the churn is realistically preventable/addressable
@@ -54,6 +66,17 @@ def get_executive_metrics():
     df['calibrated_risk'] = df['monetary'] * df['churn_probability'] * df['exposure_factor']
     
     total_customers = len(df)
+    if total_customers == 0:
+        return {
+            "total_customers": 0,
+            "total_revenue": 0.0,
+            "revenue_at_risk": 0.0,
+            "revenue_protected": 0.0,
+            "revenue_opportunity": 0.0,
+            "avg_order_value": 0.0,
+            "retention_rate": 0.0
+        }
+    
     total_revenue = df['monetary'].sum()
     revenue_at_risk = df['calibrated_risk'].sum()
     revenue_protected = total_revenue - revenue_at_risk
@@ -74,8 +97,12 @@ def get_executive_metrics():
 
 @app.get("/segments")
 def get_segments():
-    df = pd.read_sql("SELECT segment, COUNT(*) as count, SUM(monetary) as revenue FROM customer_intelligence GROUP BY segment", con=engine)
-    return df.round(2).to_dict(orient="records")
+    try:
+        df = pd.read_sql("SELECT segment, COUNT(*) as count, SUM(monetary) as revenue FROM customer_intelligence GROUP BY segment", con=engine)
+        return df.round(2).to_dict(orient="records")
+    except Exception as e:
+        logger.error(f"Error fetching segments: {e}")
+        return []
 
 @app.get("/simulation")
 def run_simulation(
@@ -83,61 +110,94 @@ def run_simulation(
     discount_pct: float = 10, 
     target_segment: str = "At Risk - High Value"
 ):
-    df = pd.read_sql("SELECT * FROM customer_intelligence", con=engine)
-    
-    if target_segment != "All":
-        targets = df[df['segment'] == target_segment]
-    else:
-        targets = df
+    try:
+        df = pd.read_sql("SELECT * FROM customer_intelligence", con=engine)
         
-    # Simulation Logic (Recalibrated)
-    avg_revenue = targets['monetary'].mean()
-    
-    # Base conversion rate assumption (2% base + 0.5% per 1% discount, capped at 25%)
-    conversion_rate = min(0.02 + (discount_pct * 0.005), 0.25)
-    
-    # Cost to run campaign per reached user (fixed $2 operations + variable cost if they convert)
-    expected_cost_per_reached = 2.0 + (avg_revenue * (discount_pct / 100.0) * conversion_rate)
-    
-    max_reach = int(budget / expected_cost_per_reached) if expected_cost_per_reached > 0 else 0
-    actual_reach = min(len(targets), max_reach)
-    
-    # Impact Estimation:
-    # Retained customers = reach * average churn risk (they were likely to leave) * conversion rate
-    estimated_retained = actual_reach * targets['churn_probability'].mean() * conversion_rate
-    incremental_revenue = estimated_retained * avg_revenue
-    
-    campaign_cost = actual_reach * expected_cost_per_reached
-    profit = incremental_revenue - campaign_cost
-    roi = (profit / campaign_cost) * 100 if campaign_cost > 0 else 0
-    
-    return {
-        "reach": actual_reach,
-        "campaign_cost": round(float(campaign_cost), 2),
-        "est_revenue": round(float(incremental_revenue), 2),
-        "est_retained_customers": int(estimated_retained),
-        "est_profit": round(float(profit), 2),
-        "roi": round(float(roi), 2)
-    }
+        if target_segment != "All":
+            targets = df[df['segment'] == target_segment]
+        else:
+            targets = df
+            
+        if targets.empty:
+            return {
+                "reach": 0,
+                "campaign_cost": 0.0,
+                "est_revenue": 0.0,
+                "est_retained_customers": 0,
+                "est_profit": 0.0,
+                "roi": 0.0
+            }
+
+        # Simulation Logic (Recalibrated)
+        avg_revenue = targets['monetary'].mean()
+        
+        # Base conversion rate assumption (2% base + 0.5% per 1% discount, capped at 25%)
+        conversion_rate = min(0.02 + (discount_pct * 0.005), 0.25)
+        
+        # Cost to run campaign per reached user (fixed $2 operations + variable cost if they convert)
+        expected_cost_per_reached = 2.0 + (avg_revenue * (discount_pct / 100.0) * conversion_rate)
+        
+        max_reach = int(budget / expected_cost_per_reached) if expected_cost_per_reached > 0 else 0
+        actual_reach = min(len(targets), max_reach)
+        
+        # Impact Estimation:
+        # Retained customers = reach * average churn risk (they were likely to leave) * conversion rate
+        estimated_retained = actual_reach * targets['churn_probability'].mean() * conversion_rate
+        incremental_revenue = estimated_retained * avg_revenue
+        
+        campaign_cost = actual_reach * expected_cost_per_reached
+        profit = incremental_revenue - campaign_cost
+        roi = (profit / campaign_cost) * 100 if campaign_cost > 0 else 0
+        
+        return {
+            "reach": actual_reach,
+            "campaign_cost": round(float(campaign_cost), 2),
+            "est_revenue": round(float(incremental_revenue), 2),
+            "est_retained_customers": int(estimated_retained),
+            "est_profit": round(float(profit), 2),
+            "roi": round(float(roi), 2)
+        }
+    except Exception as e:
+        logger.error(f"Error in simulation: {e}")
+        return {
+            "reach": 0,
+            "campaign_cost": 0.0,
+            "est_revenue": 0.0,
+            "est_retained_customers": 0,
+            "est_profit": 0.0,
+            "roi": 0.0
+        }
 
 @app.get("/interventions")
 def get_interventions():
-    df = pd.read_sql("SELECT recommended_action, COUNT(*) as count, SUM(revenue_at_risk) as risk_coverage FROM customer_intelligence GROUP BY recommended_action", con=engine)
-    return df.round(2).to_dict(orient="records")
+    try:
+        df = pd.read_sql("SELECT recommended_action, COUNT(*) as count, SUM(revenue_at_risk) as risk_coverage FROM customer_intelligence GROUP BY recommended_action", con=engine)
+        return df.round(2).to_dict(orient="records")
+    except Exception as e:
+        logger.error(f"Error fetching interventions: {e}")
+        return []
 
 @app.get("/churn")
 def get_churn_stats():
-    df = pd.read_sql("SELECT is_churned, COUNT(*) as count FROM customer_intelligence GROUP BY is_churned", con=engine)
-    return df.round(2).to_dict(orient="records")
+    try:
+        df = pd.read_sql("SELECT is_churned, COUNT(*) as count FROM customer_intelligence GROUP BY is_churned", con=engine)
+        return df.round(2).to_dict(orient="records")
+    except Exception as e:
+        logger.error(f"Error fetching churn stats: {e}")
+        return []
 
 @app.get("/customers")
 def get_customers(segment: str = None, limit: int = 50, offset: int = 0):
-    query = "SELECT * FROM customer_intelligence"
-    if segment:
-        query += f" WHERE segment = '{segment}'"
-    query += f" LIMIT {limit} OFFSET {offset}"
-    df = pd.read_sql(query, con=engine)
-    return df.round(2).to_dict(orient="records")
+    try:
+        query = "SELECT * FROM customer_intelligence"
+        if segment:
+            query += f" WHERE segment = '{segment}'"
+        query += f" LIMIT {limit} OFFSET {offset}"
+        df = pd.read_sql(query, con=engine)
+        return df.round(2).to_dict(orient="records")
+    except Exception as e:
+        logger.error(f"Error fetching customers: {e}")
+        return []
 
 @app.get("/customer/{customer_id}")
 def get_customer_detail(customer_id: str):
