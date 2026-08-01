@@ -49,34 +49,6 @@ Nexus uses a sophisticated Multi-Layer Architecture:
 * **API Gateway:** High-performance FastAPI backend serving model inferences with sub-millisecond response times.
 * **Presentation:** Component-driven Astro + React frontend utilizing a custom neo-brutalist / high-fashion data aesthetic.
 
-## 💻 Installation & Setup
-
-### 1. Backend Setup
-```bash
-# Clone the repository
-git clone https://github.com/shreyashgaikwad1234/nexus-platform.git
-cd nexus-platform/backend
-
-# Create virtual environment & Install Python dependencies
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-
-# Run the Intelligence Engine (FastAPI)
-uvicorn main:app --reload --port 8000
-```
-
-### 2. Frontend Setup
-```bash
-# Navigate to the frontend
-cd ../frontend
-
-# Install Node dependencies
-npm install
-
-# Start the Command Center
-npm run dev
-```
 
 ## 🕵️ Data Science Deep-Dive
 ### The Model: XGBoost + Prophet
